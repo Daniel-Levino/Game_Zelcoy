@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import game.Game;
+import world.Camera;
+import world.World;
 
 public class Player extends Entity {
 	
@@ -66,13 +68,16 @@ public class Player extends Entity {
 			}
 		}
 		
+		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, World.WIDTH*40 - Game.WIDTH );
+		Camera.y = Camera.clamp((this.getY() - (Game.HEIGHT/2)), 0, World.HEIGHT*40 - Game.HEIGHT );
+		
 	}
 	
 	public void render(Graphics g) {
 		if (direct == rDirect) {
-			g.drawImage(rightPlayer[index], this.getX(), this.getY(), null);
+			g.drawImage(rightPlayer[index], this.getX()-Camera.x, this.getY()-Camera.y, null);
 		}else if (direct == lDirect) {
-			g.drawImage(leftPlayer[index], this.getX(), this.getY(), null);
+			g.drawImage(leftPlayer[index], this.getX()-Camera.x, this.getY()-Camera.y, null);
 		}
 	}
 	

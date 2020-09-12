@@ -12,7 +12,7 @@ import game.Game;
 public class World {
 
 	private Tile[] tiles;
-	private static int WIDTH, HEIGHT, SIZE;
+	public static int WIDTH, HEIGHT, SIZE;
 
 	public World(String local) {
 		try {
@@ -80,8 +80,16 @@ public class World {
 	}
 
 	public void render(Graphics g) {
-		for (int i = 0; i < this.WIDTH; i++) {
-			for (int j = 0; j < this.HEIGHT; j++) {
+		int xstart = Camera.x / 40;
+		int ystart = Camera.y / 40;
+		
+		int xfinal = xstart+(Game.WIDTH/40);
+		int yfinal = ystart+(Game.HEIGHT/40);
+		
+		
+		for (int i = xstart; i <= xfinal; i++) {
+			for (int j = ystart; j <= yfinal; j++) {
+				if (i < 0 || j < 0 || i >= WIDTH || j >= HEIGHT) continue;
 				Tile tile = tiles[i + (j * this.WIDTH)];
 				tile.render(g);
 			}
