@@ -48,7 +48,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
         image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<Entity>();
         spritesheet = new Spritesheet("/Spritesheets.png");
-        player = new Player(100, 120, 10, 10,spritesheet.getSprite(160, 0, 40, 40));
+        player = new Player(100, 120, 10, 10,spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
         entities.add(player);
         world = new World("/map.png");
         

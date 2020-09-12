@@ -7,8 +7,8 @@ import game.Game;
 
 public class Tile {
 	
-	public static BufferedImage TILE_FLOOR = Game.spritesheet.getSprite(0, 0, 40, 40);
-	public static BufferedImage TILE_WALL = Game.spritesheet.getSprite(80, 80, 40, 40);
+	public static BufferedImage TILE_FLOOR = Game.spritesheet.getSprite(0, 0, World.TILE_SIZE, World.TILE_SIZE);
+	public static BufferedImage TILE_WALL = Game.spritesheet.getSprite(80, 80, World.TILE_SIZE, World.TILE_SIZE);
 	
 	private BufferedImage sprite;
 	private int x,y;

@@ -5,13 +5,14 @@ import java.awt.image.BufferedImage;
 
 import game.Game;
 import world.Camera;
+import world.World;
 
 public class Entity {
 	
-	public static BufferedImage ENEMY = Game.spritesheet.getSprite(160, 80, 40, 40);
-	public static BufferedImage LIFEPACK = Game.spritesheet.getSprite(340, 20, 20, 20);
-	public static BufferedImage ARROW = Game.spritesheet.getSprite(340, 0, 20, 20);
-	public static BufferedImage BOW = Game.spritesheet.getSprite(320, 0, 20, 20);
+	public static BufferedImage ENEMY = Game.spritesheet.getSprite(160, 80, World.TILE_SIZE, World.TILE_SIZE);
+	public static BufferedImage LIFEPACK = Game.spritesheet.getSprite(340, 20, World.TILE_SIZE/2, World.TILE_SIZE/2);
+	public static BufferedImage ARROW = Game.spritesheet.getSprite(340, 0, World.TILE_SIZE/2, World.TILE_SIZE/2);
+	public static BufferedImage BOW = Game.spritesheet.getSprite(320, 0, World.TILE_SIZE/2, World.TILE_SIZE/2);
 	
 	private int x,y,w,h;
 	private BufferedImage sprite;

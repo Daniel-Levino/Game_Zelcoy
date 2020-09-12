@@ -31,27 +31,27 @@ public class Player extends Entity {
 		leftPlayer = new BufferedImage[4];
 		
 		for (int i = 0; i < 4; i++ ) {
-			rightPlayer[i] = Game.spritesheet.getSprite(160+(i*40), 0, 40, 40);
-			leftPlayer[i] = Game.spritesheet.getSprite(160+(i*40), 40, 40, 40);
+			rightPlayer[i] = Game.spritesheet.getSprite(160+(i*World.TILE_SIZE), 0, World.TILE_SIZE, World.TILE_SIZE);
+			leftPlayer[i] = Game.spritesheet.getSprite(160+(i*World.TILE_SIZE), 40, World.TILE_SIZE, World.TILE_SIZE);
 		}
 	}
 	
 	public void tick() {
 		moved = false;
-		if (d) {
+		if (d && World.isFree(this.getX(), (int)this.getY()+speed)) { // DOWN
 			moved = true;
 			this.setY(getY() + speed);
 		}
-		if (u) {
+		if (u && World.isFree(this.getX(), this.getY()-speed)) { // UP
 			moved = true;
 			this.setY(getY() - speed);
 		}
-		if (r) {
+		if (r && World.isFree(this.getX()+speed, this.getY())) { // RIGTH
 			moved = true;
 			direct = rDirect;
 			this.setX(getX() + speed);
 		}
-		if (l) {
+		if (l && World.isFree(this.getX()-speed, this.getY())) { //LEFT
 			moved = true;
 			direct = lDirect;
 			this.setX(getX() - speed);
