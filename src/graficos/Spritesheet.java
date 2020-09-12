@@ -13,7 +13,6 @@ public class Spritesheet {
 		try {
 			this.spritesheet=ImageIO.read(getClass().getResource(enderecoImagem));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

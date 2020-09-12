@@ -6,6 +6,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import entities.*;
+import game.Game;
+
 public class World {
 
 	private Tile[] tiles;
@@ -27,29 +30,46 @@ public class World {
 
 			for (int i = 0; i < this.WIDTH; i++) {
 				for (int j = 0; j < this.HEIGHT; j++) {
+					
 					int index = i + (j * this.WIDTH);
 					int pixelAtual = pixels[index];
-					if (pixelAtual == 0xFF000000) {
+					
+					tiles[index] = new FloorTile(i * 40, j * 40, Tile.TILE_FLOOR);
+					
+					if (pixelAtual == 0xFFFFFFFF) { // WHITE
 						
-						// PIXEL PRETO = CHÃO
-						tiles[index] = new FloorTile(i * 40, j * 40, Tile.TILE_FLOOR);
-						System.out.println("chão");
-						
-					} else if (pixelAtual == 0xFFFFFFFF) {
-						
-						// PIXEL BRANCO = PAREDE
 						tiles[index] = new FloorTile(i * 40, j * 40, Tile.TILE_WALL);
-						System.out.println("Parede");
-					} else if (pixelAtual == 0xFF00FFFF) {
 						
-						// PIXEL BRANCO = PAREDE
-						tiles[index] = new FloorTile(i * 40, j * 40, Tile.TILE_FLOOR);
-						System.out.println("player");
+					} else if (pixelAtual == 0xFFFF00FF) { // PURPLE
+						
+						// PIXEL PURPLE = PLAYER
+						Game.player.setX(i*40);
+						Game.player.setY(j*40);
+						
+					} else if (pixelAtual == 0xFF00FFFF) { // CIAN
+						
+						// PIXEL CIANO = ENEMY
+						Game.entities.add(new Enemy(i*40,j*40,40,40, Entity.ENEMY));
+						
+					} else if (pixelAtual == 0xFF00FF00) { // GREEN
+						
+						// PIXEL GREEN = BOW
+						Game.entities.add(new Bow(i*40,j*40,40,40, Entity.BOW));
+						
+					} else if (pixelAtual == 0xFFFFFF00) { // YELLOW
+						
+						// PIXEL YELLOW = LIFEPACK
+						Game.entities.add(new Lifepack(i*40,j*40,40,40, Entity.LIFEPACK));
+						
+					} else if (pixelAtual == 0xFF0000FF) { // BLUE
+						
+						// PIXEL BLUE = ARROW
+						Game.entities.add(new Arrow(i*40,j*40,40,40, Entity.ARROW));
+						
 					} else {
 						
-						// chão
-						tiles[index] = new FloorTile(i * 40, j * 40, Tile.TILE_FLOOR);
-						System.out.println("chão");
+						// FLOOR
+						
 					}
 				}
 			}
