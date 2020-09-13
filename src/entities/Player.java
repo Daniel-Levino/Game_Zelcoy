@@ -1,5 +1,6 @@
 package entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -46,7 +47,7 @@ public class Player extends Entity {
 			moved = true;
 			this.setY(getY() - speed);
 		}
-		if (r && World.isFree(this.getX()+speed, this.getY())) { // RIGTH
+		if (r && World.isFree((this.getX()+speed), this.getY())) { // RIGTH
 			moved = true;
 			direct = rDirect;
 			this.setX(getX() + speed);
@@ -79,6 +80,11 @@ public class Player extends Entity {
 		}else if (direct == lDirect) {
 			g.drawImage(leftPlayer[index], this.getX()-Camera.x, this.getY()-Camera.y, null);
 		}
+		
+		// Mascara de colisão
+		g.setColor(Color.RED);
+		g.drawRect(x-Camera.x+8, y-Camera.y, World.TILE_SIZE-16, World.TILE_SIZE);
+		
 	}
 	
 	
