@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import entities.Enemy;
 import entities.Entity;
 import entities.Player;
 import graficos.Spritesheet;
@@ -33,6 +34,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
     private BufferedImage image;
     
     public static List<Entity> entities;
+    public static List<Enemy> enemies;
     
     public static Spritesheet spritesheet;
     
@@ -47,6 +49,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
         
         image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<Entity>();
+        enemies = new ArrayList<Enemy>();
         spritesheet = new Spritesheet("/Spritesheets.png");
         player = new Player(100, 120, 10, 10,spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
         entities.add(player);
@@ -62,7 +65,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setFocusable(true);
+        
     }
     
     public synchronized void start(){
@@ -126,6 +129,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	    double delta = 0;
 	    int frames = 0;
 	    double timer = System.currentTimeMillis();
+	    requestFocus();
 	    while(isRunning){
 	        long now = System.nanoTime();
 	        delta += (now - lastTime)/ns;

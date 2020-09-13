@@ -52,7 +52,9 @@ public class World {
 					} else if (pixelAtual == 0xFF00FFFF) { // CIAN
 						
 						// PIXEL CIANO = ENEMY
-						Game.entities.add(new Enemy(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, Entity.ENEMY));
+						Enemy en = new Enemy(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, Entity.ENEMY);
+						Game.entities.add(en);
+						Game.enemies.add(en);
 						
 					} else if (pixelAtual == 0xFF00FF00) { // GREEN
 						
