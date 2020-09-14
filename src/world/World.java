@@ -48,28 +48,29 @@ public class World {
 						// PIXEL PURPLE = PLAYER
 						Game.player.setX(i * TILE_SIZE);
 						Game.player.setY(j * TILE_SIZE);
+						Game.player.setMask(8, 0, TILE_SIZE-16, TILE_SIZE);
 						
 					} else if (pixelAtual == 0xFF00FFFF) { // CIAN
 						
 						// PIXEL CIANO = ENEMY
-						Enemy en = new Enemy(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, Entity.ENEMY);
+						Enemy en = new Enemy(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE/2, TILE_SIZE/2, Entity.ENEMY);
 						Game.entities.add(en);
 						Game.enemies.add(en);
 						
 					} else if (pixelAtual == 0xFF00FF00) { // GREEN
 						
 						// PIXEL GREEN = BOW
-						Game.entities.add(new Bow(i*TILE_SIZE,j*TILE_SIZE,TILE_SIZE,TILE_SIZE, Entity.BOW));
+						Game.entities.add(new Bow(i*TILE_SIZE,j*TILE_SIZE,TILE_SIZE/2,TILE_SIZE/2, Entity.BOW));
 						
 					} else if (pixelAtual == 0xFFFFFF00) { // YELLOW
 						
 						// PIXEL YELLOW = LIFEPACK
-						Game.entities.add(new Lifepack(i*TILE_SIZE,j*TILE_SIZE,TILE_SIZE,TILE_SIZE, Entity.LIFEPACK));
+						Game.entities.add(new Lifepack(i*TILE_SIZE,j*TILE_SIZE, TILE_SIZE/2, TILE_SIZE/2, Entity.LIFEPACK));
 						
 					} else if (pixelAtual == 0xFF0000FF) { // BLUE
 						
 						// PIXEL BLUE = ARROW
-						Game.entities.add(new Arrow(i*TILE_SIZE,j*TILE_SIZE,TILE_SIZE,TILE_SIZE, Entity.ARROW));
+						Game.entities.add(new Arrow(i*TILE_SIZE,j*TILE_SIZE, TILE_SIZE/2, TILE_SIZE/2, Entity.ARROW));
 						
 					} else {
 						

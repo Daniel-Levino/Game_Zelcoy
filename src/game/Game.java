@@ -55,7 +55,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
         entities = new ArrayList<Entity>();
         enemies = new ArrayList<Enemy>();
         spritesheet = new Spritesheet("/Spritesheets.png");
-        player = new Player(100, 120, 10, 10,spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
+        player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE,spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
         world = new World("/map.png");
         entities.add(player);
         
@@ -94,8 +94,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
     }    
     
     public void tick(){
-    	//for (int i=0; i< entities.size(); i++){Entity e = entities.get(i);e.tick();}
-    	for (Entity e : entities){e.tick();} // usando for-each
+    	//for (int i=0; i< enemies.size(); i++){Enemy e = enemies.get(i);e.tick();}
+    	for (Entity e : enemies){e.tick();} // usando for-each
+    	player.tick();
     }
     
     public void render(){
@@ -116,6 +117,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
         
         world.render(g);
         
+        //for (int i=0; i< entities.size(); i++){Entity e = entities.get(i);e.render(g);}
         for(Entity e : entities){e.render(g);}
         
         ui.render(g);
@@ -162,13 +164,20 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
 			player.setR(true);
+			
 		}else if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
 			player.setL(true);
+			
 		}
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
 			player.setU(true);
+			
 		}else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
 			player.setD(true);
+			
+		}
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			System.exit(1);
 		}
 	}
 

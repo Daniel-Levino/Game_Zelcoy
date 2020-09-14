@@ -44,23 +44,24 @@ public class Player extends Entity {
 	
 	public void tick() {
 		moved = false;
+		
 		if (d && World.isFree(this.getX(), (int)this.getY()+speed)) { // DOWN
-			moved = true;
 			this.setY(getY() + speed);
+			moved = true;
 		}
 		if (u && World.isFree(this.getX(), this.getY()-speed)) { // UP
-			moved = true;
 			this.setY(getY() - speed);
+			moved = true;
 		}
 		if (r && World.isFree((this.getX()+speed), this.getY())) { // RIGTH
-			moved = true;
 			direct = rDirect;
 			this.setX(getX() + speed);
+			moved = true;
 		}
 		if (l && World.isFree(this.getX()-speed, this.getY())) { //LEFT
-			moved = true;
 			direct = lDirect;
 			this.setX(getX() - speed);
+			moved = true;
 		}
 		
 		if (moved) {
@@ -72,23 +73,40 @@ public class Player extends Entity {
 					index = 0;
 				}
 			}
-		}
+		} else {index = (direct == rDirect)?0:3;}
+		
+		
+		if (life<maxLife) checkCollisionLifePack();
 		
 		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, World.WIDTH*40 - Game.WIDTH );
 		Camera.y = Camera.clamp((this.getY() - (Game.HEIGHT/2)), 0, World.HEIGHT*40 - Game.HEIGHT );
 		
 	}
 	
+	public void checkCollisionLifePack() {
+		for (int i = 0; i < Game.entities.size(); i++) {
+			Entity atual = Game.entities.get(i);
+			if (atual instanceof Lifepack) {
+				if (Entity.isColliding(this, atual)) {
+					this.life+=50;
+					if (this.life>this.maxLife)this.life=this.maxLife;
+					System.out.println("pegou life "+i);
+					Game.entities.remove(atual);
+					return;
+				}
+			}
+		}
+	}
+	
+	
 	public void render(Graphics g) {
+		//super.render(g);
 		if (direct == rDirect) {
 			g.drawImage(rightPlayer[index], this.getX()-Camera.x, this.getY()-Camera.y, null);
 		}else if (direct == lDirect) {
 			g.drawImage(leftPlayer[index], this.getX()-Camera.x, this.getY()-Camera.y, null);
 		}
 		
-		// Mascara de colisão
-		g.setColor(Color.RED);
-		g.drawRect(x-Camera.x+8, y-Camera.y, World.TILE_SIZE-16, World.TILE_SIZE);
 		
 	}
 	
@@ -154,4 +172,5 @@ public class Player extends Entity {
 	public void setMaxLife(int maxLife) {
 		this.maxLife = maxLife;
 	}
+	
 }

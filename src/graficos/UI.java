@@ -13,8 +13,8 @@ public class UI {
 	
 	
 	public void render (Graphics g) {
-		this.setRedGreen();
-		g.setColor(new Color(red, green, 80));
+		
+		g.setColor(new Color(setRed(), setGreen(), 80));
 		g.fillRect(10, 10, (int)((Game.player.getLife()/Game.player.getMaxLife())*Game.WIDTH/2), 16);
 		g.setColor(Color.WHITE);
 		g.drawRect(10, 10, Game.WIDTH/2, 16);
@@ -23,28 +23,30 @@ public class UI {
 		g.drawString((int)Game.player.getLife()+"/"+(int)Game.player.getMaxLife(), 14, 23);
 		
 	}
-	public void setRedGreen() {
+	public int setRed() {
 		damages = (int) ((Game.player.getLife()/Game.player.getMaxLife())*500);
+		int newRed;
 		if (damages != damagesAtual) {
 			damagesAtual = damages;
-			//System.out.println(damages);
-			
-			if (red<250) {
-				if (red-(500-damages)<254) {
-					red = 500 - (int)(damages);
-				}else {
-					red = 254;
-				}
-				
-				//System.out.println("r = "+red+", g = "+green);
-			}else if (damages > 0) {
-				green = (int)((Game.player.getLife()/Game.player.getMaxLife())*500);
-				//System.out.println("r = "+red+", g = "+green);
-			
-			}
-			
 		}
+			newRed = 500 - damages;
 		
+		if(newRed >=0 && newRed <=254) {
+			this.red = newRed;
+		}
+		return this.red;
+	}
+	public int setGreen() {
+		damages = (int) ((Game.player.getLife()/Game.player.getMaxLife())*500);
+		int newGreen;
+		if (damages != damagesAtual) {
+			damagesAtual = damages;
+		}
+			newGreen = damages;
 		
+		if(newGreen >=0 && newGreen <=254) {
+			this.red = newGreen;
+		}
+		return this.green;
 	}
 }

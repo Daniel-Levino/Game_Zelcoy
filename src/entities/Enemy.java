@@ -33,25 +33,26 @@ public class Enemy extends Entity {
 	}
 	
 	public void tick() {
-		if (!isCollidingWithPlayer()) {
+		if (!isColliding()) {
 			speed = 1;
 			int rand = (int)(Math.random()*100)+1;
 			if (rand<80) {
 				if(this.getX() < Game.player.getX() && 
 						World.isFree((int)(x + speed), this.getY(), 20) && 
-						!isColliding((int)(x + speed), this.getY())) {
+						!isCollidingWithEachOther((int)(x + speed), this.getY())) {
 					x += speed;
 				} else if(this.getX() > Game.player.getX() && 
 						World.isFree((int)(x - speed), this.getY(), 20) && 
-						!isColliding((int)(x - speed), this.getY())) {
+						!isCollidingWithEachOther((int)(x - speed), this.getY())) {
 					x-=speed;
-				}else if(this.getY() < Game.player.getY() && 
+				}//else
+				if(this.getY() < Game.player.getY() && 
 						World.isFree(this.getX(), (int)(y + speed), 20) &&
-						!isColliding(this.getX(), (int)(y + speed))) {
+						!isCollidingWithEachOther(this.getX(), (int)(y + speed))) {
 					y+=speed;
 				} else if(this.getY() > Game.player.getY() && 
 						World.isFree(this.getX(), (int)(y - speed), 20) &&
-						!isColliding(this.getX(), (int)(y - speed))) {
+						!isCollidingWithEachOther(this.getX(), (int)(y - speed))) {
 					y-=speed;
 				}
 			}
@@ -78,14 +79,14 @@ public class Enemy extends Entity {
 		}
 	}
 	
-	public boolean isCollidingWithPlayer() {
+	public boolean isColliding() {
 		Rectangle currentEnemy =new Rectangle(this.getX(), this.getY(), World.TILE_SIZE/2, World.TILE_SIZE/2);
 		Rectangle player = new Rectangle(Game.player.getX()+8, Game.player.getY(), World.TILE_SIZE-16, World.TILE_SIZE);
 		
 		return player.intersects(currentEnemy);
 	}
 	
-	public boolean isColliding(int xNext, int yNext) {
+	public boolean isCollidingWithEachOther(int xNext, int yNext) {
 		Rectangle currentEnemy = new Rectangle(xNext, yNext, World.TILE_SIZE/2, World.TILE_SIZE/2);
 		for (Enemy e : Game.enemies){
 			
@@ -100,7 +101,7 @@ public class Enemy extends Entity {
 	}
 	
 	public void render (Graphics g) {
-		
+		super.render(g);
 		g.drawImage(sprites[index], this.getX()-Camera.x, this.getY()-Camera.y, null);
 		
 		// Mascara de colisão
