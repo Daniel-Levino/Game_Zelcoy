@@ -23,6 +23,11 @@ public class Player extends Entity {
 	private BufferedImage[] rightPlayer;
 	private BufferedImage[] leftPlayer;
 	
+	private int level = 1;
+	private double life = 100;
+	private double maxLife = 100;
+	private double damage = 0;
+	
 	
 	
 	public Player(int x, int y, int w, int h, BufferedImage sprite ) {
@@ -128,5 +133,25 @@ public class Player extends Entity {
 
 	public void setSpeed(int newSpeed) {
 		this.speed = newSpeed;
+	}
+	
+	public double getLife() {
+		return this.life;
+	}
+	
+	public void setLife(double life) {
+		this.life = life;
+	}
+	
+	public void modLife(int life) {
+		this.setLife(this.getLife()+life);
+	}
+
+	public double getMaxLife() {
+		return maxLife;
+	}
+
+	public void setMaxLife(int maxLife) {
+		this.maxLife = maxLife;
 	}
 }
