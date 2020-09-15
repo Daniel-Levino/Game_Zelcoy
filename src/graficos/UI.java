@@ -18,9 +18,11 @@ public class UI {
 		g.fillRect(10, 10, (int)((Game.player.getLife()/Game.player.getMaxLife())*Game.WIDTH/2), 16);
 		g.setColor(Color.WHITE);
 		g.drawRect(10, 10, Game.WIDTH/2, 16);
-		g.setFont(new Font("Arial", Font.BOLD, 14));
+		g.setFont(new Font("Arial", Font.PLAIN, 14));
 		g.setColor(Color.BLUE);
 		g.drawString((int)Game.player.getLife()+"/"+(int)Game.player.getMaxLife(), 14, 23);
+		g.setColor(Color.WHITE);
+		g.drawString("Arrows: "+Game.player.getArrows(),Game.WIDTH-80,23);
 		
 	}
 	public int setRed() {

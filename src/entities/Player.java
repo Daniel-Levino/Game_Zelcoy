@@ -28,7 +28,7 @@ public class Player extends Entity {
 	private double maxLife = 100;
 	private double damage = 0;
 	
-	
+	private int arrows=0;
 	
 	public Player(int x, int y, int w, int h, BufferedImage sprite ) {
 		super(x, y, h, w, sprite);
@@ -75,29 +75,36 @@ public class Player extends Entity {
 			}
 		} else {index = (direct == rDirect)?0:3;}
 		
-		
-		if (life<maxLife) checkCollisionLifePack();
+		checkCollisionCollect();
 		
 		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, World.WIDTH*40 - Game.WIDTH );
 		Camera.y = Camera.clamp((this.getY() - (Game.HEIGHT/2)), 0, World.HEIGHT*40 - Game.HEIGHT );
 		
 	}
 	
-	public void checkCollisionLifePack() {
-		for (int i = 0; i < Game.entities.size(); i++) {
-			Entity atual = Game.entities.get(i);
+	public void checkCollisionCollect() {
+		for (int i = 0; i < Game.itens.size(); i++) {
+			Entity atual = Game.itens.get(i);
 			if (atual instanceof Lifepack) {
-				if (Entity.isColliding(this, atual)) {
+				if (Entity.isColliding(this, atual) && (life<maxLife)) {
 					this.life+=50;
 					if (this.life>this.maxLife)this.life=this.maxLife;
 					System.out.println("pegou life "+i);
-					Game.entities.remove(atual);
+					Game.itens.remove(atual);
+					return;
+				}
+			}else if(atual instanceof Arrow) {
+				if (Entity.isColliding(this, atual)) {
+					this.arrows++;
+					System.out.println("pegou arrow "+i);
+					Game.itens.remove(atual);
 					return;
 				}
 			}
 		}
 	}
 	
+		
 	
 	public void render(Graphics g) {
 		//super.render(g);
@@ -171,6 +178,10 @@ public class Player extends Entity {
 
 	public void setMaxLife(int maxLife) {
 		this.maxLife = maxLife;
+	}
+	
+	public int getArrows() {
+		return this.arrows;
 	}
 	
 }

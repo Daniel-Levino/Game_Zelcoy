@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import entities.Collect;
 import entities.Enemy;
 import entities.Entity;
 import entities.Player;
@@ -34,8 +35,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
     
     private BufferedImage image;
     
-    public static List<Entity> entities;
+    //public static List<Entity> entities;
     public static List<Enemy> enemies;
+    public static List<Collect> itens;
     
     public static Spritesheet spritesheet;
     
@@ -52,12 +54,13 @@ public class Game extends Canvas implements Runnable, KeyListener{
         
         ui= new UI();
         image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
-        entities = new ArrayList<Entity>();
+        //entities = new ArrayList<Entity>();
         enemies = new ArrayList<Enemy>();
+        itens = new ArrayList<Collect>();
         spritesheet = new Spritesheet("/Spritesheets.png");
         player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE,spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
         world = new World("/map.png");
-        entities.add(player);
+        //entities.add(player);
         
         
     }
@@ -118,7 +121,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
         world.render(g);
         
         //for (int i=0; i< entities.size(); i++){Entity e = entities.get(i);e.render(g);}
-        for(Entity e : entities){e.render(g);}
+        for(Entity e : itens) {e.render(g);}
+        for(Entity e : enemies){e.render(g);}
+        
+        player.render(g);
         
         ui.render(g);
         
