@@ -57,13 +57,13 @@ public class Game extends Canvas implements Runnable, KeyListener{
         ui= new UI();
         image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
         //entities = new ArrayList<Entity>();
-        enemies = new ArrayList<Enemy>();
-        itens = new ArrayList<Collect>();
-        spritesheet = new Spritesheet("/Spritesheets.png");
-        player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE,spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
-        world = new World("/map.png");
+        //enemies = new ArrayList<Enemy>();
+        //itens = new ArrayList<Collect>();
+        //spritesheet = new Spritesheet("/Spritesheets.png");
+        //player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE,spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
+        //world = new World("/map.png");
         //entities.add(player);
-        
+        Game.initGame();
         
     }
     
@@ -98,7 +98,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
         game.start();
     }    
     
-    public static void restartGame() {
+    public static void initGame() {
     	Game.enemies = new ArrayList<Enemy>();
     	Game.itens = new ArrayList<Collect>();
     	Game.spritesheet = new Spritesheet("/Spritesheets.png");

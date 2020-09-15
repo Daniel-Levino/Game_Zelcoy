@@ -50,9 +50,9 @@ public class World {
 						Game.player.setY(j * TILE_SIZE);
 						Game.player.setMask(8, 0, TILE_SIZE-16, TILE_SIZE);
 						
-					} else if (pixelAtual == 0xFF00FFFF) { // CIAN
+					} else if (pixelAtual == 0xFFFF0000) { // RED
 						
-						// PIXEL CIANO = ENEMY
+						// PIXEL RED = ENEMY
 						Enemy en = new Enemy(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE/2, TILE_SIZE/2, Entity.ENEMY);
 						//Game.entities.add(en);
 						Game.enemies.add(en);

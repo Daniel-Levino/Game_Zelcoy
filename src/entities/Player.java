@@ -35,6 +35,8 @@ public class Player extends Entity {
 	
 	private int mms = 0;
 	
+	private boolean hasBow;
+	
 	public Player(int x, int y, int w, int h, BufferedImage sprite ) {
 		super(x, y, h, w, sprite);
 		
@@ -46,7 +48,9 @@ public class Player extends Entity {
 			leftPlayer[i] = Game.spritesheet.getSprite(160+(i*World.TILE_SIZE), 40, World.TILE_SIZE, World.TILE_SIZE);
 		}
 		rightPlayer[4] = Game.spritesheet.getSprite(160, 80, World.TILE_SIZE, World.TILE_SIZE);
+		
 		leftPlayer[4] = Game.spritesheet.getSprite(280, 120, World.TILE_SIZE, World.TILE_SIZE);
+		
 	}
 	
 	public void tick() {
@@ -89,13 +93,16 @@ public class Player extends Entity {
 		
 		if (damage != 0) {
 			mms++;
-			if (mms>5) {
+			if (mms>20
+					) {
 				damage = 0;
 				mms = 0;
 			}
 		}
 		
-		if (life<=0) Game.restartGame();
+		if (life<=0) {
+			Game.initGame();
+		}
 		
 	}
 	
@@ -106,20 +113,28 @@ public class Player extends Entity {
 	}
 	
 	public void checkCollisionCollect() {
-		for (int i = 0; i < Game.itens.size(); i++) {
-			Entity atual = Game.itens.get(i);
+		//for (int i = 0; i < Game.itens.size(); i++) {
+		for (Entity atual : Game.itens) {	
+			//Entity atual = Game.itens.get(i);
 			if (atual instanceof Lifepack) {
 				if (Entity.isColliding(this, atual) && (life<maxLife)) {
 					this.life+=10;
 					if (this.life>this.maxLife)this.life=this.maxLife;
-					System.out.println("pegou life "+i);
+					System.out.println("pegou life ");
 					Game.itens.remove(atual);
 					return;
 				}
-			}else if(atual instanceof Arrow) {
+			}else if(atual instanceof Arrow && hasBow) {
 				if (Entity.isColliding(this, atual)) {
 					this.arrows+=12;
-					System.out.println("pegou arrow "+i);
+					System.out.println("pegou arrow ");
+					Game.itens.remove(atual);
+					return;
+				}
+			}else if(atual instanceof Bow) {
+				if (Entity.isColliding(this, atual)) {
+					hasBow = true;
+					System.out.println("pegou bow ");
 					Game.itens.remove(atual);
 					return;
 				}
@@ -135,6 +150,7 @@ public class Player extends Entity {
 		if (direct == rDirect) {
 			if(damage == 0) {
 				g.drawImage(rightPlayer[index], this.getX()-Camera.x, this.getY()-Camera.y, null);
+				if (hasBow) g.drawImage(Entity.R_HAS_BOW, getX()+18-Camera.x, getY()+18-Camera.y, null);
 			}else {
 				g.drawImage(rightPlayer[4], this.getX()-Camera.x, this.getY()-Camera.y, null);
 				g.setColor(Color.YELLOW);
@@ -144,6 +160,7 @@ public class Player extends Entity {
 		}else if (direct == lDirect) {
 			if(damage == 0) {
 				g.drawImage(leftPlayer[index], this.getX()-Camera.x, this.getY()-Camera.y, null);
+				if (hasBow) g.drawImage(Entity.L_HAS_BOW, getX()+14-Camera.x, getY()+18-Camera.y, null);
 			}else {
 				g.drawImage(leftPlayer[4], this.getX()-Camera.x, this.getY()-Camera.y, null);
 				g.setColor(Color.YELLOW);
