@@ -27,7 +27,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
     
     public static JFrame frame;
     private Thread thread;
-    private boolean isRunning = true;
+    public static boolean isRunning = true;
     private final int SCALE = 2;
     public static final int WIDTH = 480;
     public static final int HEIGHT = 280;
@@ -46,6 +46,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
     public static Player player;
     
     private UI ui;
+    
+    //public static Game game;
     
     public Game(){
     	addKeyListener(this);
@@ -95,6 +97,15 @@ public class Game extends Canvas implements Runnable, KeyListener{
         Game game = new Game();
         game.start();
     }    
+    
+    public static void restartGame() {
+    	Game.enemies = new ArrayList<Enemy>();
+    	Game.itens = new ArrayList<Collect>();
+    	Game.spritesheet = new Spritesheet("/Spritesheets.png");
+    	Game.player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE, Game.spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
+    	Game.world = new World("/map.png");
+    	Game.isRunning = true;
+    }
     
     public void tick(){
     	//for (int i=0; i< enemies.size(); i++){Enemy e = enemies.get(i);e.tick();}

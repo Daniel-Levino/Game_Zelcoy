@@ -58,15 +58,12 @@ public class Enemy extends Entity {
 			}
 		}else {
 			sec++;
-			if (sec == 60) {
+			if (sec == 30) {
 				int rand = (int)(Math.random()*dano);
-				Game.player.modLife(-1*rand);
+				Game.player.damage(rand);
 				System.out.println("Life = "+Game.player.getLife()+", dano = "+rand);
 				sec = 0;
 				
-				if (Game.player.getLife() <=0) {
-					System.out.println("Morreu! :´(");
-				}
 			}
 		}
 		frames++;
