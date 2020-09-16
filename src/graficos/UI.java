@@ -4,12 +4,17 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import entities.Enemy;
 import game.Game;
+import world.Camera;
 
 public class UI {
 	private int green = 250;
 	private int red = 0;
 	private int damagesAtual, damages;
+	private static Enemy enemy;
+	private static boolean EnemyDamage;
+	private static int mms;
 	
 	
 	public void render (Graphics g) {
@@ -23,6 +28,19 @@ public class UI {
 		g.drawString((int)Game.player.getLife()+"/"+(int)Game.player.getMaxLife(), 14, 23);
 		g.setColor(Color.WHITE);
 		g.drawString("Arrows: "+Game.player.getArrows(),Game.WIDTH-80,23);
+		
+		if (EnemyDamage) {
+			mms++;
+			if(mms == 60) EnemyDamage = false;
+			for (int i =0; i< enemy.life; i++) {
+				g.setColor(Color.RED);
+				g.fillRect(enemy.x+(4*i)-Camera.x, enemy.y-Camera.y-5, 4, 4);
+				g.setColor(Color.WHITE);
+				g.drawRect(enemy.x+(4*i)-Camera.x, enemy.y-Camera.y-5, 4, 4);
+				
+			}
+		}
+		
 		
 	}
 	public int setRed() {
@@ -50,5 +68,10 @@ public class UI {
 			this.red = newGreen;
 		}
 		return this.green;
+	}
+	public static void renderEnemyDamage(Enemy e) {
+		UI.enemy = e;
+		UI.EnemyDamage = true;
+		UI.mms = 0;
 	}
 }

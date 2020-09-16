@@ -97,11 +97,11 @@ public class World {
 				 tiles[x2+(y1*World.WIDTH)] instanceof WallTile ||
 				 tiles[x2+(y2*World.WIDTH)] instanceof WallTile);
 	}
-	public static boolean isFree(int xNext, int yNext, int height){
+	public static boolean isFree(int xNext, int yNext, int width, int height){
 		int x1 = (xNext / TILE_SIZE);
 		int y1 = (yNext / TILE_SIZE);
 		
-		int x2 = (xNext + height-1) / TILE_SIZE;
+		int x2 = (xNext + width-1) / TILE_SIZE;
 		int y2 = (yNext + height-1) / TILE_SIZE;
 		
 		return !(tiles[x1+(y1*World.WIDTH)] instanceof WallTile ||

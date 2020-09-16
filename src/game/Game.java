@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import entities.ArrowShooting;
 import entities.Collect;
 import entities.Enemy;
 import entities.Entity;
@@ -23,7 +26,7 @@ import graficos.Spritesheet;
 import graficos.UI;
 import world.World;
 
-public class Game extends Canvas implements Runnable, KeyListener{
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener{
     
     public static JFrame frame;
     private Thread thread;
@@ -38,6 +41,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
     //public static List<Entity> entities;
     public static List<Enemy> enemies;
     public static List<Collect> itens;
+    public static List<ArrowShooting> shoots;
     
     public static Spritesheet spritesheet;
     
@@ -47,24 +51,27 @@ public class Game extends Canvas implements Runnable, KeyListener{
     
     private UI ui;
     
-    //public static Game game;
-    
     public Game(){
     	addKeyListener(this);
+    	addMouseListener(this);
         setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
         initFrame();
         
         ui= new UI();
         image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
-        //entities = new ArrayList<Entity>();
-        //enemies = new ArrayList<Enemy>();
-        //itens = new ArrayList<Collect>();
-        //spritesheet = new Spritesheet("/Spritesheets.png");
-        //player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE,spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
-        //world = new World("/map.png");
-        //entities.add(player);
+        
         Game.initGame();
         
+    }
+    
+    public static void initGame() {
+    	Game.enemies = new ArrayList<Enemy>();
+    	Game.itens = new ArrayList<Collect>();
+    	Game.shoots = new ArrayList<ArrowShooting>();
+    	Game.spritesheet = new Spritesheet("/Spritesheets.png");
+    	Game.player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE, Game.spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
+    	Game.world = new World("/map.png");
+    	Game.isRunning = true;
     }
     
     public final void initFrame(){
@@ -80,7 +87,6 @@ public class Game extends Canvas implements Runnable, KeyListener{
     
     public synchronized void start(){
         thread = new Thread(this);
-        isRunning = true;
         thread.start();
     }
     
@@ -98,18 +104,13 @@ public class Game extends Canvas implements Runnable, KeyListener{
         game.start();
     }    
     
-    public static void initGame() {
-    	Game.enemies = new ArrayList<Enemy>();
-    	Game.itens = new ArrayList<Collect>();
-    	Game.spritesheet = new Spritesheet("/Spritesheets.png");
-    	Game.player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE, Game.spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
-    	Game.world = new World("/map.png");
-    	Game.isRunning = true;
-    }
-    
     public void tick(){
-    	//for (int i=0; i< enemies.size(); i++){Enemy e = enemies.get(i);e.tick();}
-    	for (Entity e : enemies){e.tick();} // usando for-each
+    	for (int i=0; i< enemies.size(); i++){Enemy e = enemies.get(i);e.tick();}
+    	//for (Entity e : enemies){e.tick();} // usando for-each
+    	
+    	for (int i=0; i< shoots.size(); i++){ArrowShooting e = shoots.get(i);e.tick();}
+    	//for (ArrowShooting e : shoots){e.tick();} // usando for-each
+    	
     	player.tick();
     }
     
@@ -137,7 +138,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
         
         player.render(g);
         
+        for (ArrowShooting e : shoots){e.render(g);} // usando for-each
+    	
         ui.render(g);
+        
         
         // ==============================
         
@@ -193,6 +197,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			player.setD(true);
 			
 		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+			player.setShoot(true);
+		}
+		
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			System.exit(1);
 		}
@@ -214,6 +223,34 @@ public class Game extends Canvas implements Runnable, KeyListener{
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		player.setShoot(true);
+		
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

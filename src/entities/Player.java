@@ -35,7 +35,7 @@ public class Player extends Entity {
 	
 	private int mms = 0;
 	
-	private boolean hasBow;
+	private boolean hasBow, shoot;
 	
 	public Player(int x, int y, int w, int h, BufferedImage sprite ) {
 		super(x, y, h, w, sprite);
@@ -56,25 +56,27 @@ public class Player extends Entity {
 	public void tick() {
 		moved = false;
 		
-		if (d && World.isFree(this.getX(), (int)this.getY()+speed)) { // DOWN
+		// ========== PLAYER MOVIMENTS ==========>
+		if (d && World.isFree(this.getX()+8, (int)this.getY()+speed,World.TILE_SIZE-16,World.TILE_SIZE)) { // DOWN
 			this.setY(getY() + speed);
 			moved = true;
 		}
-		if (u && World.isFree(this.getX(), this.getY()-speed)) { // UP
+		if (u && World.isFree(this.getX()+8, this.getY()-speed,World.TILE_SIZE-16,World.TILE_SIZE)) { // UP
 			this.setY(getY() - speed);
 			moved = true;
 		}
-		if (r && World.isFree((this.getX()+speed), this.getY())) { // RIGTH
+		if (r && World.isFree((this.getX()+8+speed), this.getY(),World.TILE_SIZE-16,World.TILE_SIZE)) { // RIGTH
 			direct = rDirect;
 			this.setX(getX() + speed);
 			moved = true;
 		}
-		if (l && World.isFree(this.getX()-speed, this.getY())) { //LEFT
+		if (l && World.isFree(this.getX()+8-speed, this.getY(),World.TILE_SIZE-16,World.TILE_SIZE)) { //LEFT
 			direct = lDirect;
 			this.setX(getX() - speed);
 			moved = true;
 		}
 		
+		// ========== SPRITES ANIMATION =========>
 		if (moved) {
 			frames++;
 			if (frames == maxFrames) {
@@ -86,24 +88,46 @@ public class Player extends Entity {
 			}
 		} else {index = (direct == rDirect)?0:3;}
 		
+		// ========== CHECK ITEMS COLLISION ==========>
 		checkCollisionCollect();
 		
+		// ========== CLAMP ADJUSTMENT ==========>
 		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, World.WIDTH*40 - Game.WIDTH );
 		Camera.y = Camera.clamp((this.getY() - (Game.HEIGHT/2)), 0, World.HEIGHT*40 - Game.HEIGHT );
 		
+		// ========== WHEN DAMAGE ==========>
 		if (damage != 0) {
-			mms++;
-			if (mms>20
-					) {
+			mms++; 
+			if (mms>20) {
 				damage = 0;
 				mms = 0;
 			}
 		}
 		
-		if (life<=0) {
-			Game.initGame();
+		// ========== WHEN SHOOTING ==========>
+		//if(shoot)arrows+=10;
+		if (shoot && hasBow && (arrows>0)) {
+			System.out.println("atrirando");
+			if (direct == rDirect) {
+				int dx = 1;
+				ArrowShooting shooting = new ArrowShooting(this.getX()+20, this.getY()+25, 20, 5, Entity.R_ARROW_SHOOTING, dx, 0);
+				Game.shoots.add(shooting);
+			}else {
+				int dx = -1;
+				ArrowShooting shooting = new ArrowShooting(this.getX(), this.getY()+25, 20, 5, Entity.L_ARROW_SHOOTING, dx, 0);
+				Game.shoots.add(shooting);
+			}
+			
+			arrows--;
+			
 		}
 		
+		// ========== LIFE FINISH ===========>
+		if (life<=0) Game.initGame();
+		
+		
+		shoot = false;
+	// ================================ TICK END ============================>
 	}
 	
 	public void damage(int d) {
@@ -126,7 +150,7 @@ public class Player extends Entity {
 				}
 			}else if(atual instanceof Arrow && hasBow) {
 				if (Entity.isColliding(this, atual)) {
-					this.arrows+=12;
+					this.arrows+=120;
 					System.out.println("pegou arrow ");
 					Game.itens.remove(atual);
 					return;
@@ -237,6 +261,9 @@ public class Player extends Entity {
 	
 	public int getArrows() {
 		return this.arrows;
+	}
+	public void setShoot(boolean arg) {
+		this.shoot = arg;
 	}
 	
 }
