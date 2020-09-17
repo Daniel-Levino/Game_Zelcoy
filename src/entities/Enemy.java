@@ -66,7 +66,6 @@ public class Enemy extends Entity {
 			if (sec == 45) {
 				int rand = (int)(Math.random()*dano);
 				Game.player.damage(rand);
-				System.out.println("Life = "+Game.player.getLife()+", dano = "+rand);
 				sec = 0;
 				
 			}

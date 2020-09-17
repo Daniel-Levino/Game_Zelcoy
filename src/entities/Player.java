@@ -107,7 +107,7 @@ public class Player extends Entity {
 		// ========== WHEN SHOOTING ==========>
 		//if(shoot)arrows+=10;
 		if (shoot && hasBow && (arrows>0)) {
-			System.out.println("atrirando");
+			
 			if (direct == rDirect) {
 				int dx = 1;
 				ArrowShooting shooting = new ArrowShooting(this.getX()+20, this.getY()+25, 20, 5, Entity.R_ARROW_SHOOTING, dx, 0);
@@ -123,7 +123,10 @@ public class Player extends Entity {
 		}
 		
 		// ========== LIFE FINISH ===========>
-		if (life<=0) Game.initGame("map_"+Game.getCurrentLevel());
+		if (life<=0) {
+			life = 0;
+			Game.gameState = "GAME OVER"; // Game.initGame(Game.getCurrentLevel());
+		}
 		
 		
 		shoot = false;
@@ -137,28 +140,23 @@ public class Player extends Entity {
 	}
 	
 	public void checkCollisionCollect() {
-		//for (int i = 0; i < Game.itens.size(); i++) {
 		for (Entity atual : Game.itens) {	
-			//Entity atual = Game.itens.get(i);
 			if (atual instanceof Lifepack) {
 				if (Entity.isColliding(this, atual) && (life<maxLife)) {
 					this.life+=10;
 					if (this.life>this.maxLife)this.life=this.maxLife;
-					System.out.println("pegou life ");
 					Game.itens.remove(atual);
 					return;
 				}
 			}else if(atual instanceof Arrow && hasBow) {
 				if (Entity.isColliding(this, atual)) {
 					this.arrows+=120;
-					System.out.println("pegou arrow ");
 					Game.itens.remove(atual);
 					return;
 				}
 			}else if(atual instanceof Bow) {
 				if (Entity.isColliding(this, atual)) {
 					hasBow = true;
-					System.out.println("pegou bow ");
 					Game.itens.remove(atual);
 					return;
 				}

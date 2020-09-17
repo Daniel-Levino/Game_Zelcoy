@@ -76,7 +76,6 @@ public class World {
 						
 						// PIXEL CIAN = CHECKPOINT
 						Game.checkPoint = new CheckPoint(i*TILE_SIZE,j*TILE_SIZE, TILE_SIZE, TILE_SIZE, Entity.CHECK_POINT);
-						System.out.println("Ciano = CheckPoint " + i);
 						Game.checkPoint.setMask(20, 30, 20, 10);
 				        
 						

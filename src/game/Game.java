@@ -33,7 +33,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     public static String fps = "FPS: 60";
     
     private BufferedImage image;
-    private static int currentLevel = 1, ultimateLevel = 2;
+    private static int currentLevel = 1, ultimateLevel = 3;
     
     //public static List<Entity> entities;
     public static List<Enemy> enemies;
@@ -49,6 +49,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     private UI ui;
     public static CheckPoint checkPoint;
     
+    public static String gameState = "NORMAL";
+    
+    private boolean restartMessage = true;
+    private int restartMessageTime = 0;
+    
     public Game(){
     	addKeyListener(this);
     	addMouseListener(this);
@@ -58,19 +63,34 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         ui= new UI();
         image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
         
-        Game.initGame("map_"+currentLevel);
+        Game.initGame(currentLevel);
         
     }
     
-    public static void initGame(String map) {
+    public static void initGame(int level) {
     	Game.enemies = new ArrayList<Enemy>();
     	Game.itens = new ArrayList<Collect>();
     	Game.shoots = new ArrayList<ArrowShooting>();
     	Game.spritesheet = new Spritesheet("/Spritesheets.png");
     	Game.player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE, Game.spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
-    	Game.world = new World("/"+map+".png");
+    	Game.world = new World("/map_"+level+".png");
     	Game.isRunning = true;
     	
+    }
+    
+    public void gameOverRestart() {
+    	if (gameState.equals("GAME OVER")) {
+			gameState = "NORMAL";
+			Game.initGame(currentLevel);
+		}
+    }
+    
+    public void gamePause() {
+    	if(gameState.equals("NORMAL")) {
+			gameState = "PAUSE";
+		}else if (gameState.equals("PAUSE")) {
+			gameState = "NORMAL";
+		}
     }
     
     public final void initFrame(){
@@ -104,19 +124,27 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     }    
     
     public void tick(){
-    	for (int i=0; i< enemies.size(); i++){Enemy e = enemies.get(i);e.tick();}
-    	//for (Entity e : enemies){e.tick();} // usando for-each
-    	
-    	for (int i=0; i< shoots.size(); i++){ArrowShooting e = shoots.get(i);e.tick();}
-    	//for (ArrowShooting e : shoots){e.tick();} // usando for-each
-    	
-    	player.tick();
-    	
-    	if (Entity.isColliding(player, checkPoint) ){ //&& enemies.size() == 0) {
-    		System.out.println("\n\nValidando checkPoint\n\n");
-    		currentLevel++ ;
-    		if(currentLevel>ultimateLevel)currentLevel=1;
-    		Game.initGame("map_"+currentLevel);
+    	if (gameState.equals("NORMAL")) {
+	    	for (int i=0; i< enemies.size(); i++){Enemy e = enemies.get(i);e.tick();}
+	    	//for (Entity e : enemies){e.tick();} // usando for-each
+	    	
+	    	for (int i=0; i< shoots.size(); i++){ArrowShooting e = shoots.get(i);e.tick();}
+	    	//for (ArrowShooting e : shoots){e.tick();} // usando for-each
+	    	
+	    	player.tick();
+	    	
+	    	if (Entity.isColliding(player, checkPoint) && enemies.size() == 0) {
+	    		currentLevel++ ;
+	    		if(currentLevel>ultimateLevel)currentLevel=1;
+	    		Game.initGame(currentLevel);
+	    	}
+    	}else if (gameState.equals("GAME OVER")) {
+    		this.restartMessageTime++;
+    		
+    		if (restartMessageTime >= 60) {
+    			restartMessageTime = 0;
+    			if (restartMessage) restartMessage = false; else restartMessage=true;
+    		}
     	}
     }
     
@@ -134,9 +162,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         
         world.render(g);
         
-        //for (int i=0; i< entities.size(); i++){Entity e = entities.get(i);e.render(g);}
-        for(Entity e : itens) {e.render(g);}
-        for(Entity e : enemies){e.render(g);}
+        for (int i=0; i< itens.size(); i++){Entity e = itens.get(i);e.render(g);}
+        //for(Entity e : itens) {e.render(g);}
+        
+        for (int i=0; i< enemies.size(); i++){Entity e = enemies.get(i);e.render(g);}
+        //sfor(Entity e : enemies){e.render(g);}
         
         
         checkPoint.render(g);
@@ -149,6 +179,34 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         
         
         // ==============================
+
+        if (!gameState.equals("NORMAL")) {
+        	Graphics2D g2 = (Graphics2D) g;
+        	g2.setColor(new Color(0,0,0,200));
+        	g2.fillRect(0, 0, WIDTH, HEIGHT);
+        	
+        	if (gameState.equals("GAME OVER")) {
+	        	g2.setFont(new Font("Arial", 1, 20));
+	        	g2.setColor(Color.WHITE);
+	        	g2.drawString(gameState, WIDTH/2-60, HEIGHT/2-20);
+	        	g2.drawLine(182, 125, 300, 125);
+	        	g2.drawOval(WIDTH/2, HEIGHT/2, 5, 5);
+	        	
+	        	if (restartMessage) {
+		        	g2.setFont(new Font("Arial", 1, 14));
+		        	g2.setColor(Color.WHITE);
+		        	g2.drawString("Pressione <ENTER> para continuar", WIDTH/2-124, HEIGHT/2+30);
+		        	g2.drawLine(115, 175, 360, 175);
+	        	}
+	        	
+        	} else if (gameState.equals("PAUSE")) {
+	        	g2.setFont(new Font("Arial", 1, 20));
+	        	g2.setColor(Color.WHITE);
+	        	g2.drawString(gameState, WIDTH/2-30, HEIGHT/2-20);
+	        	g2.drawLine(210, 125, 275, 125);
+	        	g2.drawOval(WIDTH/2, HEIGHT/2, 5, 5);
+        	}
+        }
         
         g.dispose();
         g = bs.getDrawGraphics();
@@ -210,6 +268,15 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			System.exit(1);
 		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_P) {
+			gamePause();
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			gameOverRestart();
+		}
+		
 	}
 
 	@Override
@@ -263,6 +330,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public void nextLevel() {
 		this.currentLevel++;
 	}
+	
 	public static int getCurrentLevel() {
 		return currentLevel;
 	}

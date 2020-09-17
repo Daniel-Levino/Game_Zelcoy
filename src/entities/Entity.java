@@ -64,8 +64,10 @@ public class Entity {
 	
 	public void render(Graphics g) {
 		g.drawImage(this.sprite, this.getX() - Camera.x, this.getY()-Camera.y, null);
-		g.setColor(Color.RED);
-		g.drawRect(this.getX() + this.getMaskX() - Camera.x, this.getY()+this.getMaskY()-Camera.y,this.getMaskW(),this.getMaskH());
+		
+		// Debuging collision mask
+		// g.setColor(Color.RED);
+		// g.drawRect(this.getX() + this.getMaskX() - Camera.x, this.getY()+this.getMaskY()-Camera.y,this.getMaskW(),this.getMaskH());
 	}
 	
 	
