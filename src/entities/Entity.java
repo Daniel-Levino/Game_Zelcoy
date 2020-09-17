@@ -19,6 +19,7 @@ public class Entity {
 	public static BufferedImage L_HAS_BOW = Game.spritesheet.getSprite(360, 20, 8,20);
 	public static BufferedImage R_ARROW_SHOOTING = Game.spritesheet.getSprite(320, 20, 20,5);
 	public static BufferedImage L_ARROW_SHOOTING = Game.spritesheet.getSprite(320, 25, 20,5);
+	public static BufferedImage CHECK_POINT = Game.spritesheet.getSprite(360,40, World.TILE_SIZE, World.TILE_SIZE);
 	
 	public int x, y;
 	private int w, h;

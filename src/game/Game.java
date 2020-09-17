@@ -17,11 +17,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import entities.ArrowShooting;
-import entities.Collect;
-import entities.Enemy;
-import entities.Entity;
-import entities.Player;
+import entities.*;
 import graficos.Spritesheet;
 import graficos.UI;
 import world.World;
@@ -34,9 +30,10 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     private final int SCALE = 2;
     public static final int WIDTH = 480;
     public static final int HEIGHT = 280;
-    private String fps = "FPS: 60";
+    public static String fps = "FPS: 60";
     
     private BufferedImage image;
+    private static int currentLevel = 1, ultimateLevel = 2;
     
     //public static List<Entity> entities;
     public static List<Enemy> enemies;
@@ -50,6 +47,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     public static Player player;
     
     private UI ui;
+    public static CheckPoint checkPoint;
     
     public Game(){
     	addKeyListener(this);
@@ -60,18 +58,19 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         ui= new UI();
         image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
         
-        Game.initGame();
+        Game.initGame("map_"+currentLevel);
         
     }
     
-    public static void initGame() {
+    public static void initGame(String map) {
     	Game.enemies = new ArrayList<Enemy>();
     	Game.itens = new ArrayList<Collect>();
     	Game.shoots = new ArrayList<ArrowShooting>();
     	Game.spritesheet = new Spritesheet("/Spritesheets.png");
     	Game.player = new Player(0, 0, World.TILE_SIZE, World.TILE_SIZE, Game.spritesheet.getSprite(160, 0, World.TILE_SIZE, World.TILE_SIZE));
-    	Game.world = new World("/map.png");
+    	Game.world = new World("/"+map+".png");
     	Game.isRunning = true;
+    	
     }
     
     public final void initFrame(){
@@ -112,6 +111,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     	//for (ArrowShooting e : shoots){e.tick();} // usando for-each
     	
     	player.tick();
+    	
+    	if (Entity.isColliding(player, checkPoint) ){ //&& enemies.size() == 0) {
+    		System.out.println("\n\nValidando checkPoint\n\n");
+    		currentLevel++ ;
+    		if(currentLevel>ultimateLevel)currentLevel=1;
+    		Game.initGame("map_"+currentLevel);
+    	}
     }
     
     public void render(){
@@ -124,10 +130,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         g.setColor(new Color(0));
         g.fillRect(0, 0, this.WIDTH, this.HEIGHT);
         
-        g.setColor(Color.YELLOW);
-        g.setFont(new Font("Arial", Font.BOLD, 10));
-        g.drawString(this.fps, this.WIDTH-40, this.HEIGHT-2);
-        
         // ====== Área de Renderizacao do jogo =========
         
         world.render(g);
@@ -135,6 +137,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         //for (int i=0; i< entities.size(); i++){Entity e = entities.get(i);e.render(g);}
         for(Entity e : itens) {e.render(g);}
         for(Entity e : enemies){e.render(g);}
+        
+        
+        checkPoint.render(g);
         
         player.render(g);
         
@@ -253,6 +258,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void nextLevel() {
+		this.currentLevel++;
+	}
+	public static int getCurrentLevel() {
+		return currentLevel;
 	}
 }
 	

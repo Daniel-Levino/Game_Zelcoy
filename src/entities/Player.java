@@ -123,7 +123,7 @@ public class Player extends Entity {
 		}
 		
 		// ========== LIFE FINISH ===========>
-		if (life<=0) Game.initGame();
+		if (life<=0) Game.initGame("map_"+Game.getCurrentLevel());
 		
 		
 		shoot = false;

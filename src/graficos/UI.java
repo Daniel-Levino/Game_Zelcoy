@@ -19,6 +19,7 @@ public class UI {
 	
 	public void render (Graphics g) {
 		
+		// Lifebar
 		g.setColor(new Color(setRed(), setGreen(), 80));
 		g.fillRect(10, 10, (int)((Game.player.getLife()/Game.player.getMaxLife())*Game.WIDTH/2), 16);
 		g.setColor(Color.WHITE);
@@ -26,9 +27,12 @@ public class UI {
 		g.setFont(new Font("Arial", Font.PLAIN, 14));
 		g.setColor(Color.BLUE);
 		g.drawString((int)Game.player.getLife()+"/"+(int)Game.player.getMaxLife(), 14, 23);
-		g.setColor(Color.WHITE);
-		g.drawString("Arrows: "+Game.player.getArrows(),Game.WIDTH-80,23);
 		
+		// Arrows UI
+		g.setColor(Color.WHITE);
+		g.drawString("Arrows: "+Game.player.getArrows(),Game.WIDTH-85,23);
+		
+		// Enemy feedback damage
 		if (EnemyDamage) {
 			mms++;
 			if(mms == 60) EnemyDamage = false;
@@ -41,6 +45,15 @@ public class UI {
 			}
 		}
 		
+		// Number of Enemies
+		g.setColor(Color.WHITE);
+		g.drawString("Enemies "+ Game.enemies.size() , 10,Game.HEIGHT-10);
+		
+		// FPS
+		g.setColor(Color.YELLOW);
+        g.setFont(new Font("Arial", Font.BOLD, 10));
+        g.drawString(Game.fps, Game.WIDTH-40, Game.HEIGHT-2);
+        
 		
 	}
 	public int setRed() {

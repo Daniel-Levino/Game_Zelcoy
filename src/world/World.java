@@ -72,9 +72,13 @@ public class World {
 						// PIXEL BLUE = ARROW
 						Game.itens.add(new Arrow(i*TILE_SIZE,j*TILE_SIZE, TILE_SIZE/2, TILE_SIZE/2, Entity.ARROW));
 						
-					} else {
+					} else if (pixelAtual == 0xFF00FFFF) { // CIAN
 						
-						// FLOOR
+						// PIXEL CIAN = CHECKPOINT
+						Game.checkPoint = new CheckPoint(i*TILE_SIZE,j*TILE_SIZE, TILE_SIZE, TILE_SIZE, Entity.CHECK_POINT);
+						System.out.println("Ciano = CheckPoint " + i);
+						Game.checkPoint.setMask(20, 30, 20, 10);
+				        
 						
 					}
 				}
