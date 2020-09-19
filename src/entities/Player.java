@@ -34,8 +34,9 @@ public class Player extends Entity {
 	private int arrows=0;
 	
 	private int mms = 0;
+	private int superShootTimer=0;
 	
-	private boolean hasBow, shoot;
+	private boolean hasBow, shoot, superShoot, superShootActived;
 	
 	public Player(int x, int y, int w, int h, BufferedImage sprite ) {
 		super(x, y, h, w, sprite);
@@ -105,9 +106,8 @@ public class Player extends Entity {
 		}
 		
 		// ========== WHEN SHOOTING ==========>
-		//if(shoot)arrows+=10;
 		if (shoot && hasBow && (arrows>0)) {
-			
+			Sound.SHOOT.play();
 			if (direct == rDirect) {
 				int dx = 1;
 				ArrowShooting shooting = new ArrowShooting(this.getX()+20, this.getY()+25, 20, 5, Entity.R_ARROW_SHOOTING, dx, 0);
@@ -119,6 +119,27 @@ public class Player extends Entity {
 			}
 			
 			arrows--;
+			
+		}
+		
+		prepareSuperShoot();
+		
+		if (superShootActived && hasBow && (arrows>0)) {
+			Sound.SUPER_SHOOT.play();
+			if (direct == rDirect) {
+				int dx = 1;
+				ArrowSuperShooting superShooting = new ArrowSuperShooting(this.getX()+20, this.getY()+25, 20, 5, Entity.R_SUPER_ARROW_SHOOTING, dx, 0);
+				superShooting.setMask(0, -20, 20, 40);
+				Game.shoots.add(superShooting);
+			}else {
+				int dx = -1;
+				ArrowSuperShooting superShooting = new ArrowSuperShooting(this.getX(), this.getY()+25, 20, 5, Entity.L_ARROW_SHOOTING, dx, 0);
+				Game.shoots.add(superShooting);
+			}
+			
+			arrows-=10;
+			superShootTimer = 0;
+			superShootActived = false;
 			
 		}
 		
@@ -136,6 +157,7 @@ public class Player extends Entity {
 	public void damage(int d) {
 		this.damage = d;
 		this.life -= damage;
+		Sound.PLAYER_DAMAGE.play();;
 		
 	}
 	
@@ -163,8 +185,6 @@ public class Player extends Entity {
 			}
 		}
 	}
-	
-		
 	
 	public void render(Graphics g) {
 		//super.render(g);
@@ -262,6 +282,21 @@ public class Player extends Entity {
 	}
 	public void setShoot(boolean arg) {
 		this.shoot = arg;
+	}
+	
+	public void setSuperShoot(boolean arg) {
+		this.superShoot = arg;
+	}
+	
+	public void prepareSuperShoot() {
+		if(superShoot) {
+			superShootTimer++;
+			if (superShootTimer>300) {
+				superShootActived = true;
+			}
+		}else {
+			superShootTimer = 0;
+		}
 	}
 	
 }

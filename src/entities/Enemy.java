@@ -83,7 +83,8 @@ public class Enemy extends Entity {
 			ArrowShooting a = Game.shoots.get(i);
 			if (Entity.isColliding(this, a)) {
 				life--;
-				Game.shoots.remove(a);
+				if(!(a instanceof ArrowSuperShooting)) Game.shoots.remove(a);
+				
 				UI.renderEnemyDamage(this);
 				
 			}

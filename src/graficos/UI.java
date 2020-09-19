@@ -16,10 +16,7 @@ public class UI {
 	private static boolean EnemyDamage;
 	private static int mms;
 	
-	
-	public void render (Graphics g) {
-		
-		// Lifebar
+	public void lifeBar(Graphics g) {
 		g.setColor(new Color(setRed(), setGreen(), 80));
 		g.fillRect(10, 10, (int)((Game.player.getLife()/Game.player.getMaxLife())*Game.WIDTH/2), 16);
 		g.setColor(Color.WHITE);
@@ -28,11 +25,9 @@ public class UI {
 		g.setColor(Color.BLUE);
 		g.drawString((int)Game.player.getLife()+"/"+(int)Game.player.getMaxLife(), 14, 23);
 		
-		// Arrows UI
-		g.setColor(Color.WHITE);
-		g.drawString("Arrows: "+Game.player.getArrows(),Game.WIDTH-85,23);
-		
-		// Enemy feedback damage
+	}
+	
+	public void enemyFeedbackDamage(Graphics g) {
 		if (EnemyDamage) {
 			mms++;
 			if(mms == 60) EnemyDamage = false;
@@ -44,6 +39,19 @@ public class UI {
 				
 			}
 		}
+	}
+	
+	public void render (Graphics g) {
+		
+		// Lifebar
+		lifeBar(g);
+		
+		// Enemy feedback damage
+		enemyFeedbackDamage(g);
+		
+		// Arrows UI
+		g.setColor(Color.WHITE);
+		g.drawString("Arrows: "+Game.player.getArrows(),Game.WIDTH-85,23);
 		
 		// Number of Enemies
 		g.setColor(Color.WHITE);
@@ -56,6 +64,7 @@ public class UI {
         
 		
 	}
+	
 	public int setRed() {
 		damages = (int) ((Game.player.getLife()/Game.player.getMaxLife())*500);
 		int newRed;
@@ -69,6 +78,7 @@ public class UI {
 		}
 		return this.red;
 	}
+	
 	public int setGreen() {
 		damages = (int) ((Game.player.getLife()/Game.player.getMaxLife())*500);
 		int newGreen;
@@ -82,6 +92,7 @@ public class UI {
 		}
 		return this.green;
 	}
+	
 	public static void renderEnemyDamage(Enemy e) {
 		UI.enemy = e;
 		UI.EnemyDamage = true;

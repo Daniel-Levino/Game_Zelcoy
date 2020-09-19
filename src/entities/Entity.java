@@ -17,8 +17,10 @@ public class Entity {
 	public static BufferedImage BOW = Game.spritesheet.getSprite(320, 0, World.TILE_SIZE/2, World.TILE_SIZE/2);
 	public static BufferedImage R_HAS_BOW = Game.spritesheet.getSprite(360, 0, 8,20);
 	public static BufferedImage L_HAS_BOW = Game.spritesheet.getSprite(360, 20, 8,20);
-	public static BufferedImage R_ARROW_SHOOTING = Game.spritesheet.getSprite(320, 20, 20,5);
-	public static BufferedImage L_ARROW_SHOOTING = Game.spritesheet.getSprite(320, 25, 20,5);
+	public static BufferedImage R_ARROW_SHOOTING = Game.spritesheet.getSprite(320, 20, 20,9);
+	public static BufferedImage L_ARROW_SHOOTING = Game.spritesheet.getSprite(320, 29, 20,9);
+	public static BufferedImage R_SUPER_ARROW_SHOOTING = Game.spritesheet.getSprite(320, 20, 20,9);
+	public static BufferedImage L_SUPER_ARROW_SHOOTING = Game.spritesheet.getSprite(320, 29, 20,9);
 	public static BufferedImage CHECK_POINT = Game.spritesheet.getSprite(360,40, World.TILE_SIZE, World.TILE_SIZE);
 	
 	public int x, y;
@@ -66,8 +68,8 @@ public class Entity {
 		g.drawImage(this.sprite, this.getX() - Camera.x, this.getY()-Camera.y, null);
 		
 		// Debuging collision mask
-		// g.setColor(Color.RED);
-		// g.drawRect(this.getX() + this.getMaskX() - Camera.x, this.getY()+this.getMaskY()-Camera.y,this.getMaskW(),this.getMaskH());
+		g.setColor(Color.RED);
+		g.drawRect(this.getX() + this.getMaskX() - Camera.x, this.getY()+this.getMaskY()-Camera.y,this.getMaskW(),this.getMaskH());
 	}
 	
 	

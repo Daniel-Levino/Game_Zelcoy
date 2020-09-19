@@ -49,12 +49,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     private UI ui;
     public static CheckPoint checkPoint;
     
-    public static String gameState = "NORMAL";
+    public static String gameState = "MENU";
+    public static Menu menu;
     
     private boolean restartMessage = true;
     private int restartMessageTime = 0;
     
     public Game(){
+    	Sound.BG_MUSIC.loop();
     	addKeyListener(this);
     	addMouseListener(this);
         setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
@@ -76,6 +78,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     	Game.world = new World("/map_"+level+".png");
     	Game.isRunning = true;
     	
+    	menu = new Menu();
     }
     
     public void gameOverRestart() {
@@ -83,6 +86,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			gameState = "NORMAL";
 			Game.initGame(currentLevel);
 		}
+    	
     }
     
     public void gamePause() {
@@ -94,7 +98,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     }
     
     public final void initFrame(){
-        frame = new JFrame("Game #1");
+        frame = new JFrame("Zelcoy");
         frame.add(this); 
         frame.setResizable(false);
         frame.pack();
@@ -123,6 +127,15 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         game.start();
     }    
     
+    public void checkPointCheck() {
+    	if (Entity.isColliding(player, checkPoint) && enemies.size() == 0) {
+    		Sound.NEXT_LEVEL.play();
+    		currentLevel++ ;
+    		if(currentLevel>ultimateLevel)currentLevel=1;
+    		Game.initGame(currentLevel);
+    	}
+    }
+    
     public void tick(){
     	if (gameState.equals("NORMAL")) {
 	    	for (int i=0; i< enemies.size(); i++){Enemy e = enemies.get(i);e.tick();}
@@ -133,11 +146,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	    	
 	    	player.tick();
 	    	
-	    	if (Entity.isColliding(player, checkPoint) && enemies.size() == 0) {
-	    		currentLevel++ ;
-	    		if(currentLevel>ultimateLevel)currentLevel=1;
-	    		Game.initGame(currentLevel);
-	    	}
+	    	checkPointCheck();
     	}else if (gameState.equals("GAME OVER")) {
     		this.restartMessageTime++;
     		
@@ -145,6 +154,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
     			restartMessageTime = 0;
     			if (restartMessage) restartMessage = false; else restartMessage=true;
     		}
+    	}else if (gameState.equals("MENU")) {
+    		menu.tick();
     	}
     }
     
@@ -160,7 +171,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         
         // ====== Área de Renderizacao do jogo =========
         
-        world.render(g);
+    	world.render(g);
         
         for (int i=0; i< itens.size(); i++){Entity e = itens.get(i);e.render(g);}
         //for(Entity e : itens) {e.render(g);}
@@ -180,33 +191,39 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
         
         // ==============================
 
-        if (!gameState.equals("NORMAL")) {
-        	Graphics2D g2 = (Graphics2D) g;
+       if (gameState.equals("GAME OVER")) {
+    		Graphics2D g2 = (Graphics2D) g;
         	g2.setColor(new Color(0,0,0,200));
         	g2.fillRect(0, 0, WIDTH, HEIGHT);
         	
-        	if (gameState.equals("GAME OVER")) {
-	        	g2.setFont(new Font("Arial", 1, 20));
+        	g2.setFont(new Font("Arial", 1, 20));
+        	g2.setColor(Color.WHITE);
+        	g2.drawString(gameState, WIDTH/2-60, HEIGHT/2-20);
+        	g2.drawLine(182, 125, 300, 125);
+        	g2.drawOval(WIDTH/2, HEIGHT/2, 5, 5);
+        	
+        	if (restartMessage) {
+	        	g2.setFont(new Font("Arial", 1, 14));
 	        	g2.setColor(Color.WHITE);
-	        	g2.drawString(gameState, WIDTH/2-60, HEIGHT/2-20);
-	        	g2.drawLine(182, 125, 300, 125);
-	        	g2.drawOval(WIDTH/2, HEIGHT/2, 5, 5);
-	        	
-	        	if (restartMessage) {
-		        	g2.setFont(new Font("Arial", 1, 14));
-		        	g2.setColor(Color.WHITE);
-		        	g2.drawString("Pressione <ENTER> para continuar", WIDTH/2-124, HEIGHT/2+30);
-		        	g2.drawLine(115, 175, 360, 175);
-	        	}
-	        	
-        	} else if (gameState.equals("PAUSE")) {
-	        	g2.setFont(new Font("Arial", 1, 20));
-	        	g2.setColor(Color.WHITE);
-	        	g2.drawString(gameState, WIDTH/2-30, HEIGHT/2-20);
-	        	g2.drawLine(210, 125, 275, 125);
-	        	g2.drawOval(WIDTH/2, HEIGHT/2, 5, 5);
+	        	g2.drawString("Pressione <ENTER> para continuar", WIDTH/2-124, HEIGHT/2+30);
+	        	g2.drawLine(115, 175, 360, 175);
         	}
-        }
+        	
+    	} else if (gameState.equals("PAUSE")) {
+    		Graphics2D g2 = (Graphics2D) g;
+        	g2.setColor(new Color(0,0,0,200));
+        	g2.fillRect(0, 0, WIDTH, HEIGHT);
+    		
+        	g2.setFont(new Font("Arial", 1, 20));
+        	g2.setColor(Color.WHITE);
+        	g2.drawString(gameState, WIDTH/2-30, HEIGHT/2-20);
+        	g2.drawLine(210, 125, 275, 125);
+        	g2.drawOval(WIDTH/2, HEIGHT/2, 5, 5);
+        	
+    	}else if (gameState.equals("MENU")) {
+    		menu.render(g);
+    	}
+        
         
         g.dispose();
         g = bs.getDrawGraphics();
@@ -246,35 +263,58 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		// PRESS RIGTH OR D
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
 			player.setR(true);
-			
+		
+		// PRESS LEFT OU A
 		}else if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
 			player.setL(true);
 			
 		}
+		
+		// PRESS UP OR W
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
-			player.setU(true);
+			if (gameState.equals("NORMAL")) {
+				player.setU(true);
+			}else {
+				menu.setUp(true);
+			}
 			
+		// PRESS DOWN OR S
 		}else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
-			player.setD(true);
-			
+			if (gameState.equals("NORMAL")) {
+				player.setD(true);
+			}else {
+				menu.setDown(true);
+			}
 		}
 		
+		// PRESS CONTROL TO SHOOT
 		if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-			player.setShoot(true);
+			player.setSuperShoot(true);
 		}
 		
+		// PRESS ESC TO MENU
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			System.exit(1);
+			if (gameState.equals("NORMAL")) {
+				gameState = "MENU";
+				menu.back = true;
+			}
 		}
 		
+		// PRESS P TO PAUSE
 		if (e.getKeyCode() == KeyEvent.VK_P) {
 			gamePause();
 		}
 		
+		// PRESS ENTER
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			gameOverRestart();
+			if (gameState.equals("GAME OVER")) {
+				gameOverRestart();
+			}else if(gameState.equals("MENU")){
+				menu.setSelected(true);
+			}
 		}
 		
 	}
@@ -282,58 +322,50 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
+			
 			player.setR(!true);
+			
 		}else if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
+			
 			player.setL(!true);
+			
 		}
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
+			
 			player.setU(!true);
+			
 		}else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
+			
 			player.setD(!true);
+			
+		}
+		if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+			player.setShoot(true);
+			player.setSuperShoot(false);
 		}
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void keyTyped(KeyEvent e) {}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		player.setShoot(true);
-		
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	
-	public void nextLevel() {
-		this.currentLevel++;
-	}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
 	
-	public static int getCurrentLevel() {
-		return currentLevel;
-	}
+	public void nextLevel() {currentLevel++;}
+	
+	public static int getCurrentLevel() {return currentLevel;}
+	
 }
 	
 

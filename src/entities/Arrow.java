@@ -1,6 +1,7 @@
 package entities;
 
 import java.awt.image.BufferedImage;
+import entities.Sound;
 
 public class Arrow extends Collect{
 
